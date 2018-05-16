@@ -4,13 +4,13 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 
 const {app, runServer, closeServer} = require('../server');
-
+const {TEST_DATABASE_URL} = require('../config');
 const should = chai.should();
 chai.use(chaiHttp);
 
 describe('API', function() {
     before(function() {
-        return runServer();
+        return runServer(TEST_DATABASE_URL);
     });
 
     after(function() {
