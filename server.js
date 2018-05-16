@@ -1,11 +1,17 @@
 'use strict';
 
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 const app = express();
+const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json();
+const comicsRouter = require('./routes/comics');
 
 const cors = require('cors');
-const {CLIENT_ORIGIN} = require('./config');
+const {CLIENT_ORIGIN, DATABASE_URL, PORT} = require('./config');
+const {ReadingList} = require('./models/logs');
 
 app.use(
     cors({
@@ -13,40 +19,44 @@ app.use(
     })
 );
 
-app.get('/api/*', (req, res) => {
-    res.json({ok: true});
-});
+app.use('/api/marvel', comicsRouter);
 
 let server;
 
-function runServer() {
-    const PORT = process.env.PORT || 3000;
+function runServer(databaseUrl, port=PORT) {
     return new Promise((resolve, reject) => {
-        server = app.listen(PORT, () => {
-            console.log(`Listening on port ${PORT}`);
-            resolve(server);
+        mongoose.connect(databaseUrl, err => {
+            if (err) {
+                return reject(err);
+            }
+        server = app.listen(port, () => {
+            console.log(`Listening on port ${port}`);
+            resolve();
         })
         .on('error', err => {
+            mongoose.disconnect();
             reject(err);
         });
     });
+});
 }
 
 function closeServer() {
-    return new Promise((resolve, reject) => {
-        console.log('Closing server');
-        server.close(err => {
-            if (err) {
-                reject(err);
-                return;
-            }
-            resolve();
-        });
+    return mongoose.disconnect().then(() => {
+        return new Promise((resolve, reject) => {
+            console.log('Closing server');
+            server.close(err => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve();
+            });
+        });    
     });
 }
 
 if (require.main === module) {
-    runServer().catch(err => console.error(err));
+    runServer(DATABASE_URL).catch(err => console.error(err));
 };
 
 
