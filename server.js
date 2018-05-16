@@ -5,13 +5,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const app = express();
-const bodyParser = require('body-parser');
-const jsonParser = bodyParser.json();
+
 const comicsRouter = require('./routes/comics');
+const {router: usersRouter} = require('./users');
 
 const cors = require('cors');
 const {CLIENT_ORIGIN, DATABASE_URL, PORT} = require('./config');
-const {ReadingList} = require('./models/logs');
+
+// mounted the comicsRouter at /api/marvel
+app.use('/api/marvel', comicsRouter);
 
 app.use(
     cors({
@@ -19,7 +21,8 @@ app.use(
     })
 );
 
-app.use('/api/marvel', comicsRouter);
+// able to create an account with username & password
+app.use('/api/users/', usersRouter);
 
 let server;
 
