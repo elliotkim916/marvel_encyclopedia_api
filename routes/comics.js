@@ -10,10 +10,7 @@ router.get('/', (req, res) => {
     ReadingList
         .find()
         .then(comics => {
-            res.json({
-                comics: comics.map(
-                    (comic) => comic.serialize())
-            });
+            res.json(comics);
         });
 });
 
