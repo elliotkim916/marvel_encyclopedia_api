@@ -64,7 +64,7 @@ router.post('/', jsonParser, (req, res) => {
         },
         password: {
             min: 7,
-            max: 12
+            max: 25
         }
     };
     const tooSmallField = Object.keys(sizedFields).find(
