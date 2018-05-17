@@ -4,10 +4,12 @@ const express = require('express');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
-
+const bodyParser = require('body-parser');
 const router = express.Router();
 
 const localAuth = passport.authenticate('local', {session: false});
+// localStrategy needs to use bodyParser to extract username and password info from request body
+router.use(bodyParser.json());
 
 const createAuthToken = user => {
     return jwt.sign({user}, config.JWT_SECRET, {
