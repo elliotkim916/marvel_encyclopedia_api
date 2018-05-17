@@ -1,5 +1,6 @@
 'use strict';
 
+const mongoose = require('mongoose');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const should = chai.should();
@@ -9,10 +10,25 @@ chai.use(chaiHttp);
 const {app, runServer, closeServer} = require('../server');
 const {TEST_DATABASE_URL} = require('../config');
 const {ReadingList} = require('../models/logs');
+const testData = require('../db/comics');
+
+// deletes db between tests to maintain state between tests
+function teardownDb() {
+    console.warn('Deleting database!');
+    return mongoose.connection.dropDatabase();
+}
 
 describe('Marvel Encyclopedia Server-Side API', function() {
     before(function() {
         return runServer(TEST_DATABASE_URL);
+    });
+
+    beforeEach(function() {
+        return ReadingList.insertMany(testData);
+    });
+
+    afterEach(function() {
+        return teardownDb();
     });
 
     after(function() {
@@ -27,7 +43,7 @@ describe('GET endpoint', function() {
                 expect(res).to.be.status(200);
                 expect(res).to.be.json;
                 expect(res.body).to.be.a('array');
-                // expect(res.body).to.have.lengthOf.at.least(1);
+                expect(res.body).to.have.lengthOf.at.least(1);
             });
         });
     });
@@ -86,6 +102,26 @@ describe('PUT endpoint', function() {
         .then(post => {
             expect(toUpdate.read).to.equal(post.read);
         });
+    });
+});
+
+describe('DELETE endpoint', function() {
+    it('should delete a reading entry', function() {
+        let entry;
+        return ReadingList
+            .findOne()
+            .then(function(_entry) {
+                entry=_entry;
+                return chai.request(app)
+                .delete(`/api/marvel/${entry._id}`)
+            })
+            .then(function(res) {
+                expect(res).to.have.status(204);
+                return ReadingList.findById(entry._id)
+            })
+            .then(function(_entry) {
+                expect(_entry).to.be.null;
+            });
     });
 });
 });
