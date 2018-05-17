@@ -3,24 +3,19 @@
         "title": "Avengers (2018) #2",
         "read": "Already Read",
         "userName": "Elliot",
-        "_id": {
-            "$oid": "5afb01574c7557177f786877"
-        }
+        "_id": "5afb01574c7557177f786877"
+        
     },
     {
         "title": "Mighty Thor: At the Gates of Valhalla (2018) #1",
         "read": "Already Read",
         "userName": "Elliot",
-        "_id": {
-            "$oid": "5afb01574c7557177f786878"
-        }
+        "_id": "5afb01574c7557177f786878"
     },
     {
         "title": "Incredible Hulk (2017) #716",
         "read": "Read Later",
         "userName": "Elliot",
-        "_id": {
-            "$oid": "5afb01574c7557177f786879"
-        }
+        "_id": "5afb01574c7557177f786879"
     }
 ]
