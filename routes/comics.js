@@ -49,4 +49,16 @@ router.put('/:id', jsonParser, (req, res) => {
         });
 });
 
+router.delete('/:id', (req, res) => {
+    ReadingList
+        .findByIdAndRemove(req.params.id)
+        .then(() => {
+            res.status(204).json({message: 'Success!'});
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({error: 'Something went wrong..'});
+        });
+});
+
 module.exports = router;
