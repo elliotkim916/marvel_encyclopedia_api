@@ -5,7 +5,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const app = express();
-const bodyParser = require('body-parser');
+
 const passport = require('passport');
 const {router: authRouter, localStrategy, jwtStrategy} = require('./auth');
 
@@ -14,9 +14,6 @@ const {router: usersRouter} = require('./users');
 
 const cors = require('cors');
 const {CLIENT_ORIGIN, DATABASE_URL, PORT} = require('./config');
-
-// localStrategy needs to use bodyParser to extract username and password info from request body
-app.use(bodyParser());
 
 // mounted the comicsRouter at /api/marvel
 app.use('/api/marvel', comicsRouter);
