@@ -15,9 +15,6 @@ const {router: usersRouter} = require('./users');
 const cors = require('cors');
 const {CLIENT_ORIGIN, DATABASE_URL, PORT} = require('./config');
 
-// mounted the comicsRouter at /api/marvel
-app.use('/api/marvel', comicsRouter);
-
 app.use(
     cors({
         origin: CLIENT_ORIGIN
@@ -25,11 +22,13 @@ app.use(
 );
 
 // CORS
+// line 31 -> tells browser that it can trust API
+// line 33 -> prevents malicious JS to gather data for 3rd party services & send to malicious server
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*'); 
     res.header('Access-Control-Allow-Credentials','true'); 
-    res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization'); 
-    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization'); 
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
     if (req.method === 'OPTIONS') { 
         return res.sendStatus(204); 
         } 
@@ -46,11 +45,14 @@ app.use('/api/auth', authRouter);
 
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
-app.get('/api/protected', jwtAuth, (req, res) => {
-  return res.json({
-    data: 'rosebud'
-  });
-});
+// mounted the comicsRouter at /api/marvel
+app.use('/api/marvel', jwtAuth, comicsRouter);
+
+// app.get('/api/protected', jwtAuth, (req, res) => {
+//   return res.json({
+//     data: 'rosebud'
+//   });
+// });
 
 let server;
 
