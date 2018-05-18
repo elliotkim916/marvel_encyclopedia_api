@@ -3,12 +3,15 @@
 const mongoose = require('mongoose');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const should = chai.should();
 const expect = chai.expect;
 chai.use(chaiHttp);
 
 const {app, runServer, closeServer} = require('../server');
 const {TEST_DATABASE_URL} = require('../config');
+
+const jwt = require('jsonwebtoken');
+const config = require('../config');
+
 const {ReadingList} = require('../models/logs');
 const testData = require('../db/comics');
 
@@ -17,6 +20,21 @@ function teardownDb() {
     console.warn('Deleting database!');
     return mongoose.connection.dropDatabase();
 }
+
+const createAuthToken = user => {
+    return jwt.sign({user}, config.JWT_SECRET, {
+        subject: user.username,
+        expiresIn: config.JWT_EXPIRY,
+        algorithm: 'HS256'
+    });
+};
+
+const TEST_USER = {
+    "username": "msMarvel",
+    "password": "iAmTheBest"
+}
+
+const USER_TOKEN = createAuthToken(TEST_USER);
 
 describe('Marvel Encyclopedia Server-Side API', function() {
     before(function() {
@@ -39,6 +57,7 @@ describe('GET endpoint', function() {
     it('should return entire comic reading list', function() {
         return chai.request(app)
             .get('/api/marvel')
+            .set('Authorization', `Bearer ${USER_TOKEN}`)
             .then(function(res) {
                 expect(res).to.be.status(200);
                 expect(res).to.be.json;
@@ -46,6 +65,32 @@ describe('GET endpoint', function() {
                 expect(res.body).to.have.lengthOf.at.least(1);
             });
         });
+    });
+
+    let resReadingEntry;
+    it('should return comic list with the right fields', function() {
+        return chai.request(app)
+            .get('/api/marvel')
+            .set('Authorization', `Bearer ${USER_TOKEN}`)
+            .then(function(res) {
+                expect(res).to.be.status(200);
+                expect(res).to.be.json;
+                expect(res.body).to.be.a('array');
+                expect(res.body).to.have.lengthOf.at.least(1);
+
+                res.body.forEach(function(post) {
+                    expect(post).to.be.a('object');
+                    expect(post).to.include.keys('read', 'title')
+                });
+
+            resReadingEntry = res.body[0];
+            return ReadingList.findById(resReadingEntry._id);
+            })
+
+            .then(function(post) {
+                expect(resReadingEntry.read).to.equal(post.read);
+                expect(resReadingEntry.title).to.equal(post.title);
+            });
     });
 
 describe('POST endpoint', function() {
@@ -59,6 +104,7 @@ describe('POST endpoint', function() {
     
     return chai.request(app)
         .post('/api/marvel')
+        .set('Authorization', `Bearer ${USER_TOKEN}`)
         .send(newPost)
         .then(function(res) {
             expect(res).to.be.status(201);
@@ -92,6 +138,7 @@ describe('PUT endpoint', function() {
         
         return chai.request(app)
             .put(`/api/marvel/${post._id}`)
+            .set('Authorization', `Bearer ${USER_TOKEN}`)
             .send(toUpdate);
         }).then(res => {
             expect(res).to.have.status(204);
@@ -114,6 +161,7 @@ describe('DELETE endpoint', function() {
                 entry=_entry;
                 return chai.request(app)
                 .delete(`/api/marvel/${entry._id}`)
+                .set('Authorization', `Bearer ${USER_TOKEN}`)
             })
             .then(function(res) {
                 expect(res).to.have.status(204);
