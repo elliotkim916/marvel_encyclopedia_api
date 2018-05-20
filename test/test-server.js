@@ -80,7 +80,7 @@ describe('GET endpoint', function() {
 
                 res.body.data.forEach(function(post) {
                     expect(post).to.be.a('object');
-                    expect(post).to.include.keys('read', 'title', 'imgUrl')
+                    expect(post).to.include.keys('read', 'title', 'imgUrl', 'resourceURI')
                 });
 
             resReadingEntry = res.body.data[0];
@@ -91,6 +91,7 @@ describe('GET endpoint', function() {
                 expect(resReadingEntry.read).to.equal(post.read);
                 expect(resReadingEntry.title).to.equal(post.title);
                 expect(resReadingEntry.imgUrl).to.equal(post.imgUrl);
+                expect(resReadingEntry.resourceURI).to.equal(post.resourceURI);
             });
     });
 
@@ -101,7 +102,8 @@ describe('POST endpoint', function() {
         "read": "Read Later",
         "userName": "Stan Lee",
         "id": "5afbbad4202724320a0d4fa4",
-        "imgUrl": "Comic Book Picture"
+        "imgUrl": "Comic Book Picture",
+        "resourceURI": "Comic Book URI"
     }
     
     return chai.request(app)
@@ -112,10 +114,11 @@ describe('POST endpoint', function() {
             expect(res).to.be.status(201);
             expect(res).to.be.json;
             expect(res.body).to.be.a('object');
-            expect(res.body).to.include.keys('title', 'read', 'imgUrl');
+            expect(res.body).to.include.keys('title', 'read', 'imgUrl', 'resourceURI');
             expect(res.body.title).to.equal(newPost.title);
             expect(res.body.read).to.equal(newPost.read);
             expect(res.body.imgUrl).to.equal(newPost.imgUrl);
+            expect(res.body.resourceURI).to.equal(newPost.resourceURI);
             return ReadingList.findById(res.body.id);
         })
 // we retreive new post from the db & compare its data to the data we sent over
@@ -123,6 +126,7 @@ describe('POST endpoint', function() {
             expect(post.title).to.equal(newPost.title);
             expect(post.read).to.equal(newPost.read);
             expect(post.imgUrl).to.equal(newPost.imgUrl);
+            expect(post.resourceURI).to.equal(newPost.resourceURI);
         });
     });
 });
