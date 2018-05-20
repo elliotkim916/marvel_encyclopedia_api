@@ -25,7 +25,8 @@ router.post('/', [jsonParser, jwtAuth], (req, res) => {
             title: req.body.title,
             read: req.body.read,
             imgUrl: req.body.imgUrl,
-            userName: req.body.userName
+            userName: req.body.userName,
+            resourceURI: req.body.resourceURI
         }).then(comic => res.status(201).json(comic.serialize()))
         .catch(err => {
             console.error(err);
