@@ -46,7 +46,7 @@ app.use('/api/auth', authRouter);
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
 // mounted the comicsRouter at /api/marvel
-app.use('/api/marvel', jwtAuth, comicsRouter);
+app.use('/api/marvel', comicsRouter);
 
 // app.get('/api/protected', jwtAuth, (req, res) => {
 //   return res.json({
