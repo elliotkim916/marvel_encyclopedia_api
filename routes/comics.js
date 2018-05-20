@@ -1,24 +1,30 @@
 'use strict';
 
+const express = require('express');
 const router = require('express').Router();
 const jsonParser = require('body-parser').json();
 const mongoose = require('mongoose');
 
 const {ReadingList} = require('../models/logs');
+const passport = require('passport');
+const {router: authRouter, localStrategy, jwtStrategy} = require('../auth');
 
-router.get('/', (req, res) => {
+const jwtAuth = passport.authenticate('jwt', { session: false });
+
+router.get('/', jwtAuth, (req, res) => {
     ReadingList
         .find()
         .then(comics => {
-            res.json(comics);
+            res.json({data: comics});
         });
 });
 
-router.post('/', jsonParser, (req, res) => {
+router.post('/', [jsonParser, jwtAuth], (req, res) => {
     ReadingList 
         .create({
             title: req.body.title,
             read: req.body.read,
+            imgUrl: req.body.imgUrl,
             userName: req.body.userName
         }).then(comic => res.status(201).json(comic.serialize()))
         .catch(err => {
@@ -27,7 +33,7 @@ router.post('/', jsonParser, (req, res) => {
         });
 });
 
-router.put('/:id', jsonParser, (req, res) => {
+router.put('/:id', [jsonParser, jwtAuth], (req, res) => {
     if (!(req.params.id && req.body.id === req.body.id)) {
         res.status(400).json({
             error: 'Request path id and request body id values must match'
@@ -49,7 +55,7 @@ router.put('/:id', jsonParser, (req, res) => {
         });
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', jwtAuth, (req, res) => {
     ReadingList
         .findByIdAndRemove(req.params.id)
         .then(() => {
