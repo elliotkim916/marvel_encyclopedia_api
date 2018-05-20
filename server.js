@@ -48,12 +48,6 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 // mounted the comicsRouter at /api/marvel
 app.use('/api/marvel', comicsRouter);
 
-// app.get('/api/protected', jwtAuth, (req, res) => {
-//   return res.json({
-//     data: 'rosebud'
-//   });
-// });
-
 let server;
 
 function runServer(databaseUrl, port=PORT) {
