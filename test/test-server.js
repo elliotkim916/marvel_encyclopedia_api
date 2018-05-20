@@ -61,8 +61,8 @@ describe('GET endpoint', function() {
             .then(function(res) {
                 expect(res).to.be.status(200);
                 expect(res).to.be.json;
-                expect(res.body).to.be.a('array');
-                expect(res.body).to.have.lengthOf.at.least(1);
+                expect(res.body.data).to.be.a('array');
+                expect(res.body.data).to.have.lengthOf.at.least(1);
             });
         });
     });
@@ -75,21 +75,22 @@ describe('GET endpoint', function() {
             .then(function(res) {
                 expect(res).to.be.status(200);
                 expect(res).to.be.json;
-                expect(res.body).to.be.a('array');
-                expect(res.body).to.have.lengthOf.at.least(1);
+                expect(res.body.data).to.be.a('array');
+                expect(res.body.data).to.have.lengthOf.at.least(1);
 
-                res.body.forEach(function(post) {
+                res.body.data.forEach(function(post) {
                     expect(post).to.be.a('object');
-                    expect(post).to.include.keys('read', 'title')
+                    expect(post).to.include.keys('read', 'title', 'imgUrl')
                 });
 
-            resReadingEntry = res.body[0];
+            resReadingEntry = res.body.data[0];
             return ReadingList.findById(resReadingEntry._id);
             })
 
             .then(function(post) {
                 expect(resReadingEntry.read).to.equal(post.read);
                 expect(resReadingEntry.title).to.equal(post.title);
+                expect(resReadingEntry.imgUrl).to.equal(post.imgUrl);
             });
     });
 
@@ -99,7 +100,8 @@ describe('POST endpoint', function() {
         "title": "Iron Man (2018) #71",
         "read": "Read Later",
         "userName": "Stan Lee",
-        "id": "5afbbad4202724320a0d4fa4"
+        "id": "5afbbad4202724320a0d4fa4",
+        "imgUrl": "Comic Book Picture"
     }
     
     return chai.request(app)
@@ -110,17 +112,17 @@ describe('POST endpoint', function() {
             expect(res).to.be.status(201);
             expect(res).to.be.json;
             expect(res.body).to.be.a('object');
-            expect(res.body).to.include.keys('title', 'read');
+            expect(res.body).to.include.keys('title', 'read', 'imgUrl');
             expect(res.body.title).to.equal(newPost.title);
             expect(res.body.read).to.equal(newPost.read);
-            expect(res.body.userName).to.equal(newPost.userName);
+            expect(res.body.imgUrl).to.equal(newPost.imgUrl);
             return ReadingList.findById(res.body.id);
         })
 // we retreive new post from the db & compare its data to the data we sent over
         .then(function(post) {
             expect(post.title).to.equal(newPost.title);
             expect(post.read).to.equal(newPost.read);
-            expect(post.userName).to.equal(newPost.userName);
+            expect(post.imgUrl).to.equal(newPost.imgUrl);
         });
     });
 });
