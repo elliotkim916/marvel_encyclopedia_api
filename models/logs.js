@@ -6,7 +6,7 @@ const readingListSchema = mongoose.Schema({
     title: {type: String},
     read: {type: String},
     imgUrl: {type: String},
-    userName: {type: String},
+    username: {type: String},
     resourceURI: {type: String}
 });
 
@@ -15,7 +15,7 @@ readingListSchema.methods.serialize = function() {
         title: this.title,
         read: this.read,
         imgUrl: this.imgUrl,
-        userName: this.userName,
+        username: this.username,
         resourceURI: this.resourceURI,
         id: this._id
     };
