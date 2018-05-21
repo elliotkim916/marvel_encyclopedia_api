@@ -11,21 +11,21 @@ const {router: authRouter, localStrategy, jwtStrategy} = require('../auth');
 
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
-router.get('/', jwtAuth, (req, res) => {
+router.get('/:username', jwtAuth, (req, res) => {
     ReadingList
-        .find()
+        .find({username: req.params.username})
         .then(comics => {
             res.json({data: comics});
         });
 });
 
-router.post('/', [jsonParser, jwtAuth], (req, res) => {
+router.post('/:username', [jsonParser, jwtAuth], (req, res) => {
     ReadingList 
         .create({
             title: req.body.title,
             read: req.body.read,
             imgUrl: req.body.imgUrl,
-            userName: req.body.userName,
+            username: req.body.username,
             resourceURI: req.body.resourceURI
         }).then(comic => res.status(201).json(comic.serialize()))
         .catch(err => {
