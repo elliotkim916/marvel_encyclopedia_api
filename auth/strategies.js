@@ -3,12 +3,10 @@
 const {Strategy: LocalStrategy} = require('passport-local');
 const {Strategy: JwtStrategy, ExtractJwt} = require('passport-jwt');
 
-require('dotenv').config();
 const {User} = require('../users/models');
 const {JWT_SECRET} = require('../config');
 
 const localStrategy = new LocalStrategy(function(username, password, callback) {
-    console.log(username, password, callback);
     let user;
     User.findOne({ username: username })
         .then(_user => {
@@ -28,7 +26,6 @@ const localStrategy = new LocalStrategy(function(username, password, callback) {
                     message: 'Incorrect username or password'
                 });
             }
-            console.log(isValid);
             return callback(null, user);
         })
         .catch(err => {
