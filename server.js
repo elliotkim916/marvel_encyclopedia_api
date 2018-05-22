@@ -15,11 +15,11 @@ const {router: usersRouter} = require('./users');
 const cors = require('cors');
 const {CLIENT_ORIGIN, DATABASE_URL, PORT} = require('./config');
 
-app.use(
-    cors({
-        origin: CLIENT_ORIGIN
-    })
-);
+// app.use(
+//     cors({
+//         origin: CLIENT_ORIGIN
+//     })
+// );
 
 // CORS
 // line 31 -> tells browser that it can trust API
@@ -53,6 +53,7 @@ let server;
 function runServer(databaseUrl, port=PORT) {
     return new Promise((resolve, reject) => {
         mongoose.connect(databaseUrl, err => {
+            console.log(databaseUrl);
             if (err) {
                 return reject(err);
             }
