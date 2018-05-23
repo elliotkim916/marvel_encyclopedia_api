@@ -30,8 +30,8 @@ const createAuthToken = user => {
 };
 
 const TEST_USER = {
-    "username": "mrMarvel",
-    "password": "iAmAwesome"
+    "username": "PeterParker",
+    "password": "iAmSpiderMan"
 }
 
 const USER_TOKEN = createAuthToken(TEST_USER);
@@ -56,7 +56,7 @@ describe('Marvel Encyclopedia Note Taking', function() {
 describe('GET endpoint', function() {
     it('should return all notes', function() {
         return chai.request(app)
-            .get(`/api/notes`)
+            .get(`/api/notes/${TEST_USER.username}`)
             .set('Authorization', `Bearer ${USER_TOKEN}`)
             .then(function(res) {
                 expect(res).to.be.status(200);
@@ -70,7 +70,7 @@ describe('GET endpoint', function() {
     let resNoteEntry;
     it('should return note with the right fields', function() {
         return chai.request(app)
-            .get(`/api/notes`)
+            .get(`/api/notes/${TEST_USER.username}`)
             .set('Authorization', `Bearer ${USER_TOKEN}`)
             .then(function(res) {
                 expect(res).to.be.status(200);
@@ -80,7 +80,7 @@ describe('GET endpoint', function() {
 
                 res.body.data.forEach(function(note) {
                     expect(note).to.be.a('object');
-                    expect(note).to.include.keys('title', 'note')
+                    expect(note).to.include.keys('title', 'note', 'username');
                 });
 
                 resNoteEntry = res.body.data[0];
@@ -89,6 +89,7 @@ describe('GET endpoint', function() {
             .then(function(post) {
                 expect(resNoteEntry.title).to.equal(post.title);
                 expect(resNoteEntry.note).to.equal(post.note);
+                expect(resNoteEntry.username).to.equal(post.username);
             });
     });
 
@@ -96,26 +97,29 @@ describe('POST endpoint', function() {
     it('should add a new note entry', function() {
     const newNote = {
         "title": "Iron Man",
-        "note": "Iron Man is Tony Stark!"
+        "note": "Iron Man is Tony Stark!",
+        "username": "TonyStark"
     }
 
     return chai.request(app)
-        .post(`/api/notes`)
+        .post(`/api/notes/${newNote.username}`)
         .set('Authorization', `Bearer ${USER_TOKEN}`)
         .send(newNote)
         .then(function(res) {
             expect(res).to.be.status(201);
             expect(res).to.be.json;
             expect(res.body).to.be.a('object');
-            expect(res.body).to.include.keys('title', 'note');
+            expect(res.body).to.include.keys('title', 'note', 'username');
             expect(res.body.title).to.equal(newNote.title);
             expect(res.body.note).to.equal(newNote.note);
+            expect(res.body.username).to.equal(newNote.username);
             return NotesList.findById(res.body.id);
         })
 // we retrieve new note from db & compare its data to the data we sent over 
         .then(function(post) {
             expect(post.title).to.equal(newNote.title);
             expect(post.note).to.equal(newNote.note);
+            expect(post.username).to.equal(newNote.username);
         });
     });
 });
