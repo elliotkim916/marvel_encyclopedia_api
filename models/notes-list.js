@@ -5,7 +5,8 @@ const mongoose = require('mongoose');
 const notesListSchema = mongoose.Schema({
     title: {type: String},
     note: {type: String},
-    username: {type: String}
+    username: {type: String},
+    isEditing:{type: Boolean, default: false}
 });
 
 notesListSchema.methods.serialize = function() {
@@ -13,7 +14,8 @@ notesListSchema.methods.serialize = function() {
         title: this.title,
         note: this.note,
         id: this._id,
-        username: this.username
+        username: this.username,
+        isEditing: this.isEditing
     };
 };
 
