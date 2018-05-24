@@ -61,7 +61,6 @@ describe('/POST Log in to account', function() {
             expect(res).to.be.status(200);
             expect(res.body.state).to.be.true;
             expect(res.body.data).to.be.a('object');
-            res.body.should.have.property('authToken');
         })
     })
 });
