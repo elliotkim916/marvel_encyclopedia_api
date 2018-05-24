@@ -57,7 +57,6 @@ describe('GET endpoint', function() {
     it('should return all notes', function() {
         return chai.request(app)
             .get(`/api/notes`)
-            .set('Authorization', `Bearer ${USER_TOKEN}`)
             .then(function(res) {
                 expect(res).to.be.status(200);
                 expect(res).to.be.json;
@@ -71,7 +70,6 @@ describe('GET endpoint', function() {
     it('should return note with the right fields', function() {
         return chai.request(app)
             .get(`/api/notes`)
-            .set('Authorization', `Bearer ${USER_TOKEN}`)
             .then(function(res) {
                 expect(res).to.be.status(200);
                 expect(res).to.be.json;
@@ -101,7 +99,6 @@ describe('POST endpoint', function() {
 
     return chai.request(app)
         .post(`/api/notes`)
-        .set('Authorization', `Bearer ${USER_TOKEN}`)
         .send(newNote)
         .then(function(res) {
             expect(res).to.be.status(201);
@@ -133,7 +130,6 @@ describe('PUT endpoint', function() {
         
         return chai.request(app)
             .put(`/api/notes/${note._id}`)
-            .set('Authorization', `Bearer ${USER_TOKEN}`)
             .send(toUpdate);
         }).then(res => {
             expect(res).to.have.status(204);
@@ -156,7 +152,6 @@ describe('DELETE endpoint', function() {
                 note=_note;
                 return chai.request(app)
                 .delete(`/api/notes/${note._id}`)
-                .set('Authorization', `Bearer ${USER_TOKEN}`)
             })
             .then(function(res) {
                 expect(res).to.have.status(204);
