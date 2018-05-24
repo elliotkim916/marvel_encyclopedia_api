@@ -11,21 +11,20 @@ const {router: authRouter, localStrategy, jwtStrategy} = require('../auth');
 
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
-router.get('/:username', jwtAuth, (req, res) => {
+router.get('/', jwtAuth, (req, res) => {
     NotesList
-        .find({username: req.params.username})
+        .find()
         .then(notes => {
             res.json({data: notes});
         });
 });
 
-router.post('/:username', [jsonParser, jwtAuth], (req, res) => {
+router.post('/', [jsonParser, jwtAuth], (req, res) => {
     NotesList
         .create({
             title: req.body.title,
-            note: req.body.note,
-            username: req.body.username
-        }).then(userNote => res.status(201).json(userNote.serialize()))
+            note: req.body.note
+        }).then(note => res.status(201).json(note.serialize()))
         .catch(err => {
             console.error(err);
             res.status(500).json({error: 'Something went wrong..'});
