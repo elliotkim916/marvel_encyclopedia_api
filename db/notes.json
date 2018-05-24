@@ -2,37 +2,31 @@
     {
         "title": "notes one",
         "note": "lorem ipsum lorem ipsum",
-        "_id": "5afb01574c7557177f786878",
-        "username": "PeterParker"
+        "_id": "5afb01574c7557177f786878"
     },
     {
         "title": "notes two",
         "note": "asdf asdf jkl; jkl;",
-        "_id": "5afb01574c7557177f786879",
-        "username": "PeterParker"
+        "_id": "5afb01574c7557177f786879"
     },
     {
         "title": "notes three",
         "note": "qwer qwer tyui tyfdsafui",
-        "_id": "5afb01574c7551177f786877",
-        "username": "PeterParker"
+        "_id": "5afb01574c7551177f786877"
     },
     {
         "title": "notes four",
         "note": "lorem ipsum lorem ipfdsafdasum",
-        "_id": "5afb01574c7557127f786878",
-        "username": "PeterParker"
+        "_id": "5afb01574c7557127f786878"
     },
     {
         "title": "notes five",
         "note": "asdf asdf jkl; jklfdsfa;",
-        "_id": "5afb01574c7557137f786879",
-        "username": "PeterParker"
+        "_id": "5afb01574c7557137f786879"
     },
     {
         "title": "notes six",
         "note": "qwer qwer tyui tyuifdf",
-        "_id": "5afb01574c7557147f786877",
-        "username": "PeterParker"
+        "_id": "5afb01574c7557147f786877"
     }
 ]
