@@ -148,7 +148,7 @@ describe('PUT endpoint', function() {
 });
 
 describe('DELETE endpoint', function() {
-    it('should delete a note entry', function() {
+    it('shouold delete a note entry', function() {
         let note;
         return NotesList
             .findOne()
