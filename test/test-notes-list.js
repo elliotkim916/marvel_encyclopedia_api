@@ -30,8 +30,8 @@ const createAuthToken = user => {
 };
 
 const TEST_USER = {
-    "username": "mrMarvel",
-    "password": "iAmAwesome"
+    "username": "msMarvel",
+    "password": "iAmTheBest"
 }
 
 const USER_TOKEN = createAuthToken(TEST_USER);
