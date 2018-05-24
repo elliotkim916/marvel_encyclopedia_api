@@ -11,7 +11,7 @@ const {router: authRouter, localStrategy, jwtStrategy} = require('../auth');
 
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
-router.get('/', jwtAuth, (req, res) => {
+router.get('/', (req, res) => {
     NotesList
         .find()
         .then(notes => {
@@ -19,7 +19,7 @@ router.get('/', jwtAuth, (req, res) => {
         });
 });
 
-router.post('/', [jsonParser, jwtAuth], (req, res) => {
+router.post('/', jsonParser, (req, res) => {
     NotesList
         .create({
             title: req.body.title,
@@ -31,7 +31,7 @@ router.post('/', [jsonParser, jwtAuth], (req, res) => {
         });
 });
 
-router.put('/:id', [jsonParser, jwtAuth], (req, res) => {
+router.put('/:id', jsonParser, (req, res) => {
     if (!(req.params.id && req.body.id === req.body.id)) {
         res.status(400).json({
             error: 'Request path id and request body id values must match'
@@ -55,7 +55,7 @@ router.put('/:id', [jsonParser, jwtAuth], (req, res) => {
         });
 });
 
-router.delete('/:id', jwtAuth, (req, res) => {
+router.delete('/:id', (req, res) => {
     NotesList
         .findByIdAndRemove(req.params.id)
         .then(() => {
