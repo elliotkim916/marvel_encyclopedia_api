@@ -21,6 +21,7 @@ app.use(
     })
 );
 
+
 // CORS
 // line 31 -> tells browser that it can trust API
 // line 33 -> prevents malicious JS to gather data for 3rd party services & send to malicious server
