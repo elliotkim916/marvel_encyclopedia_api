@@ -7,12 +7,12 @@ const {ReadingList} = require('../models/logs');
 const comicsSeed = require('../db/comics.json');
 
 mongoose.connect(DATABASE_URL)
-    .then(function() {
-        return mongoose.connection.db.dropDatabase();
-    }).then(function() {
-        return ReadingList.insertMany(comicsSeed);
-    }).then(function() {
-        return mongoose.disconnect();
-    }).catch(err => {
-        console.error(err.message);
-    });
+  .then(function() {
+    return mongoose.connection.db.dropDatabase();
+  }).then(function() {
+    return ReadingList.insertMany(comicsSeed);
+  }).then(function() {
+    return mongoose.disconnect();
+  }).catch(err => {
+    (err.message);
+  });
