@@ -7,17 +7,17 @@ mongoose.Promise = global.Promise;
 const app = express();
 
 const passport = require('passport');
-const {router: authRouter, localStrategy, jwtStrategy} = require('./auth');
+const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 
 const comicsRouter = require('./routes/comics');
-const {router: usersRouter} = require('./users');
+const { router: usersRouter } = require('./users');
 
 const cors = require('cors');
-const {CLIENT_ORIGIN, DATABASE_URL, PORT} = require('./config');
+const { CLIENT_ORIGIN, DATABASE_URL, PORT } = require('./config');
 
 app.use(
   cors({
-    origin: CLIENT_ORIGIN
+    origin: CLIENT_ORIGIN,
   })
 );
 
@@ -34,16 +34,18 @@ app.use('/api/marvel', comicsRouter);
 
 let server;
 
-function runServer(databaseUrl, port=PORT) {
+function runServer(databaseUrl, port = PORT) {
   return new Promise((resolve, reject) => {
-    mongoose.connect(databaseUrl, err => {
+    mongoose.connect(databaseUrl, (err) => {
       if (err) {
         return reject(err);
       }
-      server = app.listen(port, () => {
-        resolve();
-      })
-        .on('error', err => {
+      server = app
+        .listen(port, () => {
+          console.log('Listening on port ' + port);
+          resolve();
+        })
+        .on('error', (err) => {
           mongoose.disconnect();
           reject(err);
         });
@@ -54,19 +56,18 @@ function runServer(databaseUrl, port=PORT) {
 function closeServer() {
   return mongoose.disconnect().then(() => {
     return new Promise((resolve, reject) => {
-      server.close(err => {
+      server.close((err) => {
         if (err) {
           return reject(err);
         }
         resolve();
       });
-    });    
+    });
   });
 }
 
 if (require.main === module) {
-  runServer(DATABASE_URL).catch(err => err);
-};
+  runServer(DATABASE_URL).catch((err) => err);
+}
 
-
-module.exports = {app, runServer, closeServer};
+module.exports = { app, runServer, closeServer };
